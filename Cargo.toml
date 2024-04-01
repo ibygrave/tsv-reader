@@ -1,0 +1,19 @@
+[package]
+name = "tsv-reader"
+version = "0.1.0"
+edition = "2021"
+
+[workspace]
+
+resolver = "2"
+
+members = [
+    "tsv-reader-derive",
+    "example-tsv-reader",
+]
+
+[features]
+derive = ["dep:tsv-reader-derive"]
+
+[dependencies]
+tsv-reader-derive = { path = "tsv-reader-derive", optional = true }
