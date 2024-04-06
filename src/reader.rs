@@ -3,7 +3,7 @@ pub use tsv_reader_derive::*;
 
 use crate::err::Error;
 
-pub struct Walker<'a>(std::str::Split<'a, char>);
+pub struct Walker<'a>(core::str::Split<'a, char>);
 
 impl<'a> Walker<'a> {
     pub fn next_field(&mut self) -> Result<&'a str, Error> {

@@ -1,14 +1,15 @@
-use std::{fmt::Display, num::ParseIntError, str::Utf8Error};
+use core::{fmt::Display, num::ParseIntError, str::Utf8Error};
 
 #[derive(Debug)]
 pub struct Error;
 
 impl Display for Error {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         write!(f, "TsvError")
     }
 }
 
+#[cfg(std)]
 impl std::error::Error for Error {}
 
 impl From<Utf8Error> for Error {

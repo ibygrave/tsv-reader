@@ -10,10 +10,19 @@ resolver = "2"
 members = [
     "tsv-reader-derive",
     "example-tsv-reader",
+    "example-no-std",
 ]
 
 [features]
+default = ["std"]
 derive = ["dep:tsv-reader-derive"]
+std = []
 
 [dependencies]
 tsv-reader-derive = { path = "tsv-reader-derive", optional = true }
+
+[profile.dev]
+panic = "abort"
+
+[profile.release]
+panic = "abort"
