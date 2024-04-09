@@ -32,6 +32,9 @@ fn hex_digit(c: char) -> Result<u8, Error> {
 impl<const N: usize> Read<'_> for [u8; N] {
     fn parse_tsv(fields: &mut Walker<'_>) -> Result<Self, Error> {
         let hex_data = fields.next_field()?;
+        if hex_data.len() != 2 * N {
+            return Err(Error)
+        }
         let mut result = [0; N];
         let mut chars = hex_data.chars();
         for byte in result.iter_mut().take(N) {
