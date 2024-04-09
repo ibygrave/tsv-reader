@@ -21,6 +21,7 @@ enum Shape {
 #[derive(PartialEq, Debug, Read)]
 struct Object {
     colour: Colour,
+    fill: bool,
     shape: Shape,
 }
 

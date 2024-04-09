@@ -7,6 +7,16 @@ impl<'a> Read<'a> for &'a str {
     }
 }
 
+impl<'a> Read<'a> for bool{
+    fn parse_tsv(fields: &mut Walker<'a>) -> Result<Self, Error> {
+        match fields.next_field()? {
+            "true" => Ok(true),
+            "false" => Ok(false),
+            _ => Err(Error)
+        }
+    }
+}
+
 fn hex_digit(c: char) -> Result<u8, Error> {
     Ok(match c {
         '0' => 0,

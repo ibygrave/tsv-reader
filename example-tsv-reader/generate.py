@@ -8,9 +8,9 @@ def main(tsvfilename):
         # header
         writer.writerow(["1", "Example Title", "FFFFFF"])
         # shapes
-        writer.writerow(["000000", "Line", "0", "0", "500", "500"])
-        writer.writerow(["550055", "Circle", "200", "300", "20"])
-        writer.writerow(["FF0055", "Rectangle", "100", "100", "200", "200"])
+        writer.writerow(["000000", "false", "Line", "0", "0", "500", "500"])
+        writer.writerow(["550055", "true", "Circle", "200", "300", "20"])
+        writer.writerow(["FF0055", "false", "Rectangle", "100", "100", "200", "200"])
 
 
 if __name__ == '__main__':
