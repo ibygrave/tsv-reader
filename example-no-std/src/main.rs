@@ -27,12 +27,8 @@ enum Bob {
 }
 
 fn parse_data(input: &[u8]) -> Result<(Alice<'_>, impl Iterator<Item = Bob> + '_), Error> {
-    let mut lines = core::str::from_utf8(input)?.split('\n');
-    let alice = lines.next().ok_or(Error)?;
-    Ok((
-        Walker::parse_one_line(alice)?,
-        lines.map_while(|line| Walker::parse_one_line(line).ok()),
-    ))
+    let mut doc = Document::new(input)?;
+    Ok((doc.parse_one()?, doc.parse_iter()))
 }
 
 const DATA: &[u8] = include_bytes!(concat!(env!("OUT_DIR"), "/data.tsv"));

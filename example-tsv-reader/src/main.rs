@@ -1,5 +1,5 @@
 use tsv_reader::err::Error;
-use tsv_reader::reader::{Read, Walker};
+use tsv_reader::reader::{Document, Read, Walker};
 
 #[derive(PartialEq, Debug, Read)]
 struct Colour([u8; 3]);
@@ -25,15 +25,9 @@ struct Object {
     shape: Shape,
 }
 
-fn parse_data(
-    input: &[u8],
-) -> Result<(Header<'_>, impl Iterator<Item = Object> + '_), Error> {
-    let mut lines = core::str::from_utf8(input)?.split('\n');
-    let header_line = lines.next().ok_or(Error)?;
-    Ok((
-        Walker::parse_one_line(header_line)?,
-        lines.map_while(|line| Walker::parse_one_line(line).ok()),
-    ))
+fn parse_data(input: &[u8]) -> Result<(Header<'_>, impl Iterator<Item = Object> + '_), Error> {
+    let mut doc = Document::new(input)?;
+    Ok((doc.parse_one()?, doc.parse_iter()))
 }
 
 const DATA: &[u8] = include_bytes!(concat!(env!("OUT_DIR"), "/data.tsv"));
