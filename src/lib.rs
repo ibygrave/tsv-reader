@@ -30,7 +30,7 @@
 //! enum Shape {
 //!     Line(u32, u32, u32, u32),
 //!     Circle(u32, u32, u32),
-//!     Rectange(u32, u32, u32, u32),
+//!     Rectangle(u32, u32, u32, u32),
 //! }
 //!
 //! #[derive(PartialEq, Debug, Read)]
@@ -53,8 +53,15 @@
 //!             background: Colour([255, 255, 255])
 //!         }
 //!     );
-//!     println!("{:?}", header);
-//!     println!("{:?}", objects);
+//!     assert_eq!(objects.len(), 3);
+//!     assert_eq!(
+//!         objects[1],
+//!         Object {
+//!             colour: Colour([0x55, 0x00, 0x55]),
+//!             fill: true,
+//!             shape: Shape::Circle(200, 300, 20)
+//!         }
+//!     );
 //! }
 //! ```
 
