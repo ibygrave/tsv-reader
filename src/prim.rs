@@ -12,9 +12,8 @@ impl<'a> Read<'a> for &'a str {
 }
 
 /// `true` or `false`
-// TODO: Why is there a named lifetime here?
-impl<'a> Read<'a> for bool {
-    fn parse_tsv(fields: &mut Walker<'a>) -> Result<Self, Error> {
+impl Read<'_> for bool {
+    fn parse_tsv(fields: &mut Walker<'_>) -> Result<Self, Error> {
         match fields.next_field()? {
             "true" => Ok(true),
             "false" => Ok(false),

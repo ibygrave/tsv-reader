@@ -50,8 +50,6 @@ pub struct Document<'a>(core::str::Split<'a, char>);
 impl<'a> Document<'a> {
     /// Initialise a `Document` from a byte sequence.
     /// Returns an error if the data is not valid utf-8.
-    ///
-    /// TODO: Can this be `const`?
     pub fn new(data: &'a [u8]) -> Result<Self, Error> {
         Ok(Self(core::str::from_utf8(data)?.split('\n')))
     }
