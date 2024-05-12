@@ -1,7 +1,0 @@
-[package]
-name = "example-tsv-reader"
-version = "0.1.0"
-edition = "2021"
-
-[dependencies]
-tsv-reader = { path = "..", features=["std", "derive"] }

@@ -9,12 +9,11 @@ resolver = "2"
 
 members = [
     "tsv-reader-derive",
-    "example-tsv-reader",
     "example-no-std",
 ]
 
 [features]
-default = ["std"]
+default = ["std", "derive"]
 derive = ["dep:tsv-reader-derive"]
 std = []
 
