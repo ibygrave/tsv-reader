@@ -1,12 +1,18 @@
+//! Implementations of [`Read`]: trait.Read.html
+//! for primitive types.
+
 use crate::reader::{Read, Walker};
 use crate::Error;
 
+/// A reference to a slice of the document data.
 impl<'a> Read<'a> for &'a str {
     fn parse_tsv(fields: &mut Walker<'a>) -> Result<Self, Error> {
         fields.next_field()
     }
 }
 
+/// `true` or `false`
+// TODO: Why is there a named lifetime here?
 impl<'a> Read<'a> for bool {
     fn parse_tsv(fields: &mut Walker<'a>) -> Result<Self, Error> {
         match fields.next_field()? {
@@ -39,6 +45,7 @@ fn hex_digit(c: char) -> Result<u8, Error> {
     })
 }
 
+/// Parse a hex encoding if it is of exactly the right length.
 impl<const N: usize> Read<'_> for [u8; N] {
     fn parse_tsv(fields: &mut Walker<'_>) -> Result<Self, Error> {
         let hex_data = fields.next_field()?;

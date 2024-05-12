@@ -1,5 +1,9 @@
+//! Error types
+
 use core::{fmt::Display, num::ParseIntError, str::Utf8Error};
 
+/// Error type of parsers.
+/// TODO: Provide details of which error happened.
 #[derive(Debug)]
 pub struct Error;
 
