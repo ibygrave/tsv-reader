@@ -56,6 +56,16 @@ fn try_derive_read(input: DeriveInput) -> Result<proc_macro2::TokenStream, &'sta
     })
 }
 
+/// Derive a parser for a type consisting of types implementing `Read`.
+///
+/// Unit types consume no input and construct an instance of the type.
+///
+/// Data structs (with named or anonymous fields) recursively call
+/// `Read::parse_tsv` for each field in the order declared.
+///
+/// Enums consume one field which must be the name of one of the enum
+/// variants. Any content of the variant is parsed in the same way as
+/// a data struct.
 #[proc_macro_derive(Read)]
 pub fn derive_read(input: TokenStream) -> TokenStream {
     let input = parse_macro_input!(input as DeriveInput);
