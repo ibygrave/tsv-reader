@@ -1,5 +1,5 @@
-use crate::err::Error;
 use crate::reader::{Read, Walker};
+use crate::Error;
 
 impl<'a> Read<'a> for &'a str {
     fn parse_tsv(fields: &mut Walker<'a>) -> Result<Self, Error> {
@@ -7,12 +7,12 @@ impl<'a> Read<'a> for &'a str {
     }
 }
 
-impl<'a> Read<'a> for bool{
+impl<'a> Read<'a> for bool {
     fn parse_tsv(fields: &mut Walker<'a>) -> Result<Self, Error> {
         match fields.next_field()? {
             "true" => Ok(true),
             "false" => Ok(false),
-            _ => Err(Error)
+            _ => Err(Error),
         }
     }
 }
@@ -43,7 +43,7 @@ impl<const N: usize> Read<'_> for [u8; N] {
     fn parse_tsv(fields: &mut Walker<'_>) -> Result<Self, Error> {
         let hex_data = fields.next_field()?;
         if hex_data.len() != 2 * N {
-            return Err(Error)
+            return Err(Error);
         }
         let mut result = [0; N];
         let mut chars = hex_data.chars();

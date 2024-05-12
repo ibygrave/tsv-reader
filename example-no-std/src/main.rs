@@ -4,8 +4,7 @@
 use core::panic::PanicInfo;
 
 use libc_print::std_name::println;
-use tsv_reader::err::Error;
-use tsv_reader::reader::*;
+use tsv_reader::{Document, Error, Read, Walker};
 
 #[panic_handler]
 fn panic(_panic: &PanicInfo<'_>) -> ! {

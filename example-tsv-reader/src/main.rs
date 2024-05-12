@@ -1,5 +1,4 @@
-use tsv_reader::err::Error;
-use tsv_reader::reader::{Document, Read, Walker};
+use tsv_reader::{Document, Error, Read, Walker};
 
 #[derive(PartialEq, Debug, Read)]
 struct Colour([u8; 3]);

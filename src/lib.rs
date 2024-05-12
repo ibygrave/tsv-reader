@@ -1,5 +1,8 @@
 #![no_std]
 
-pub mod err;
-pub mod prim;
-pub mod reader;
+mod err;
+mod prim;
+mod reader;
+
+pub use err::Error;
+pub use reader::{Document, Read, Walker};
