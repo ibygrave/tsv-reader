@@ -68,11 +68,7 @@ impl<'doc> Document<'doc> {
     /// Parses all the remaining lines of the document as values of type `T`,
     /// iterating over the parsed values.
     /// This method consumes the document.
-    ///
-    /// Note: Parsing errors terminate the iterator but do not return an error.
-    ///
-    /// TODO: Iterate over `Result<T>` instead of dropping parsing errors.
-    pub fn parse_iter<T: Read<'doc>>(self) -> impl Iterator<Item = T> + 'doc {
-        self.0.map_while(|line| Walker::parse_one_line(line).ok())
+    pub fn parse_iter<T: Read<'doc>>(self) -> impl Iterator<Item = Result<T, Error>> + 'doc {
+        self.0.map(|line| Walker::parse_one_line(line))
     }
 }

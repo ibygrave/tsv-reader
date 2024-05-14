@@ -42,7 +42,8 @@
 //! fn main() {
 //!     let mut doc = Document::new(DOC).unwrap();
 //!     let header: Header = doc.parse_one().unwrap();
-//!     let objects: Vec<Object> = doc.parse_iter().collect();
+//!     let objects: Result<Vec<Object>, Error> = doc.parse_iter().collect();
+//!     let objects = objects.unwrap();
 //!
 //!     assert_eq!(
 //!         header,
