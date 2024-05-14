@@ -41,7 +41,7 @@ fn try_derive_read(input: DeriveInput) -> Result<proc_macro2::TokenStream, &'sta
             Ok(quote!(
             match fields.next_field()? {
                 #(stringify!(#names) => Ok(Self::#names #cons),)*
-                _ => Err(Error),
+                _ => Err(Error::ParseField),
             }))
         }
         syn::Data::Union(_) => Err("Only structs can derive `Read`"),

@@ -17,7 +17,7 @@ impl Read<'_> for bool {
         match fields.next_field()? {
             "true" => Ok(true),
             "false" => Ok(false),
-            _ => Err(Error),
+            _ => Err(Error::ParseField),
         }
     }
 }
@@ -40,7 +40,7 @@ fn hex_digit(c: char) -> Result<u8, Error> {
         'd' | 'D' => 13,
         'e' | 'E' => 14,
         'f' | 'F' => 15,
-        _ => return Err(Error),
+        _ => return Err(Error::ParseField),
     })
 }
 
@@ -49,13 +49,13 @@ impl<const N: usize> Read<'_> for [u8; N] {
     fn parse_tsv(fields: &mut Walker<'_>) -> Result<Self, Error> {
         let hex_data = fields.next_field()?;
         if hex_data.len() != 2 * N {
-            return Err(Error);
+            return Err(Error::ParseField);
         }
         let mut result = [0; N];
         let mut chars = hex_data.chars();
         for byte in result.iter_mut().take(N) {
-            *byte = (hex_digit(chars.next().ok_or(Error)?)? << 4)
-                | hex_digit(chars.next().ok_or(Error)?)?;
+            *byte = (hex_digit(chars.next().ok_or(Error::ParseField)?)? << 4)
+                | hex_digit(chars.next().ok_or(Error::ParseField)?)?;
         }
         Ok(result)
     }

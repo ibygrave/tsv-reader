@@ -14,7 +14,7 @@ impl<'doc> Walker<'doc> {
     /// Returns an error if there are no more fields to parse
     /// on this line.
     pub fn next_field(&mut self) -> Result<&'doc str, Error> {
-        self.0.next().ok_or(Error)
+        self.0.next().ok_or(Error::EndOfLine)
     }
 
     /// Parse a value of type `T` from the remaining fields
@@ -62,7 +62,7 @@ impl<'doc> Document<'doc> {
     ///
     /// TODO: Make surplus fields into an error?
     pub fn parse_one<T: Read<'doc>>(&mut self) -> Result<T, Error> {
-        Walker::parse_one_line(self.0.next().ok_or(Error)?)
+        Walker::parse_one_line(self.0.next().ok_or(Error::EndOfDocument)?)
     }
 
     /// Parses all the remaining lines of the document as values of type `T`,

@@ -3,13 +3,26 @@
 use core::{fmt::Display, num::ParseIntError, str::Utf8Error};
 
 /// Error type of parsers.
-/// TODO: Provide details of which error happened.
 #[derive(Debug)]
-pub struct Error;
+pub enum Error {
+    /// Document data is not valid UTF8.
+    Utf8,
+    /// Error when parsing a field.
+    ParseField,
+    /// Unexpectedly reached end of document.
+    EndOfDocument,
+    /// Unexpectedly reached end of line.
+    EndOfLine,
+}
 
 impl Display for Error {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-        write!(f, "TsvError")
+        match self {
+            Error::Utf8 => write!(f, "Error::Utf8"),
+            Error::ParseField => write!(f, "Error::ParseField"),
+            Error::EndOfDocument => write!(f, "Error::EndOfDocument"),
+            Error::EndOfLine => write!(f, "Error::EndOfLine"),
+        }
     }
 }
 
@@ -18,12 +31,12 @@ impl std::error::Error for Error {}
 
 impl From<Utf8Error> for Error {
     fn from(_value: Utf8Error) -> Self {
-        Error
+        Error::Utf8
     }
 }
 
 impl From<ParseIntError> for Error {
     fn from(_value: ParseIntError) -> Self {
-        Error
+        Error::ParseField
     }
 }
