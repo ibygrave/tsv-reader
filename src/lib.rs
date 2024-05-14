@@ -1,16 +1,16 @@
 #![no_std]
 
-//! Minimal parser for tab-seperated-value (TSV) files.
+//! Minimal parser for tab-seperated-value (TSV) data.
 //! Usable in `no_std` and without `alloc`.
-//! The supported file format differes from standard TSV
+//! The supported data format differs from standard TSV
 //! by omitting the header line, and allowing each line
 //! to encode a different type.
 //!
 //! ## Example
 //! ```rust
 //! # use tsv_reader::*;
-//! // A TSV file where the first line is a `Header` and the rest are `Object`s.
-//! const DATA: &[u8] = br#"1	Example Title	FFFFFF
+//! // A TSV document where the first line is a `Header` and the rest are `Object`s.
+//! const DOC: &[u8] = br#"1	Example Title	FFFFFF
 //! 000000	false	Line	0	0	500	500
 //! 550055	true	Circle	200	300	20
 //! FF0055	false	Rectangle	100	100	200	200
@@ -20,9 +20,9 @@
 //! struct Colour([u8; 3]);
 //!
 //! #[derive(PartialEq, Debug, Read)]
-//! struct Header<'a> {
+//! struct Header<'doc> {
 //!     version: u32,
-//!     title: &'a str,
+//!     title: &'doc str,
 //!     background: Colour,
 //! }
 //!
@@ -41,7 +41,7 @@
 //! }
 //!
 //! fn main() {
-//!     let mut doc = Document::new(DATA).unwrap();
+//!     let mut doc = Document::new(DOC).unwrap();
 //!     let header: Header = doc.parse_one().unwrap();
 //!     let objects: Vec<Object> = doc.parse_iter().collect();
 //!

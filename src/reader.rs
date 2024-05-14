@@ -7,13 +7,13 @@ use crate::err::Error;
 
 /// An iterator over fields of a single line,
 /// as parsed into a single data value.
-pub struct Walker<'a>(core::str::Split<'a, char>);
+pub struct Walker<'doc>(core::str::Split<'doc, char>);
 
-impl<'a> Walker<'a> {
+impl<'doc> Walker<'doc> {
     /// Return the next unparsed field.
     /// Returns an error if there are no more fields to parse
     /// on this line.
-    pub fn next_field(&mut self) -> Result<&'a str, Error> {
+    pub fn next_field(&mut self) -> Result<&'doc str, Error> {
         self.0.next().ok_or(Error)
     }
 
@@ -22,11 +22,11 @@ impl<'a> Walker<'a> {
     /// Called recursively to parse nested data structures.
     /// Returns an error if the end of line is unexpectedly reached,
     /// or is a field is not of the correct format.
-    pub fn parse_one<T: Read<'a>>(&mut self) -> Result<T, Error> {
+    pub fn parse_one<T: Read<'doc>>(&mut self) -> Result<T, Error> {
         T::parse_tsv(self)
     }
 
-    fn parse_one_line<T: Read<'a>>(line: &'a str) -> Result<T, Error> {
+    fn parse_one_line<T: Read<'doc>>(line: &'doc str) -> Result<T, Error> {
         Self(line.split('\t')).parse_one()
     }
 }
@@ -37,20 +37,20 @@ impl<'a> Walker<'a> {
 /// If the `derive` feature is enabled then this trait
 /// can be automatically derived for structs and enums
 /// consisting only of other types which implement `Read`.
-pub trait Read<'a>: Sized {
+pub trait Read<'doc>: Sized {
     /// Retrieve 0 or more fields from `fields` and convert
     /// them into a value of type `Self`,
     /// or return an error if parsing fails.
-    fn parse_tsv(fields: &mut Walker<'a>) -> Result<Self, Error>;
+    fn parse_tsv(fields: &mut Walker<'doc>) -> Result<Self, Error>;
 }
 
 /// An iterator over the lines of a TSV document.
-pub struct Document<'a>(core::str::Split<'a, char>);
+pub struct Document<'doc>(core::str::Split<'doc, char>);
 
-impl<'a> Document<'a> {
+impl<'doc> Document<'doc> {
     /// Initialise a `Document` from a byte sequence.
     /// Returns an error if the data is not valid utf-8.
-    pub fn new(data: &'a [u8]) -> Result<Self, Error> {
+    pub fn new(data: &'doc [u8]) -> Result<Self, Error> {
         Ok(Self(core::str::from_utf8(data)?.split('\n')))
     }
 
@@ -61,7 +61,7 @@ impl<'a> Document<'a> {
     /// on the line, this is not an error. Unused fields are ignored.
     ///
     /// TODO: Make surplus fields into an error?
-    pub fn parse_one<T: Read<'a>>(&mut self) -> Result<T, Error> {
+    pub fn parse_one<T: Read<'doc>>(&mut self) -> Result<T, Error> {
         Walker::parse_one_line(self.0.next().ok_or(Error)?)
     }
 
@@ -72,7 +72,7 @@ impl<'a> Document<'a> {
     /// Note: Parsing errors terminate the iterator but do not return an error.
     ///
     /// TODO: Iterate over `Result<T>` instead of dropping parsing errors.
-    pub fn parse_iter<T: Read<'a>>(self) -> impl Iterator<Item = T> + 'a {
+    pub fn parse_iter<T: Read<'doc>>(self) -> impl Iterator<Item = T> + 'doc {
         self.0.map_while(|line| Walker::parse_one_line(line).ok())
     }
 }

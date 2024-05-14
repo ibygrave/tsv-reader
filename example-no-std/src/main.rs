@@ -12,9 +12,9 @@ fn panic(_panic: &PanicInfo<'_>) -> ! {
 }
 
 #[derive(Debug, Read)]
-struct Alice<'a> {
+struct Alice<'doc> {
     eat_me: u8,
-    who_am_i: &'a str,
+    who_am_i: &'doc str,
 }
 
 #[derive(Debug, Read)]

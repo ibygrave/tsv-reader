@@ -26,7 +26,7 @@ fn try_derive_read(input: DeriveInput) -> Result<proc_macro2::TokenStream, &'sta
     // Lifetime annoations on impl depend on whether the target type has a lifetime parameter.
     let (target_life, reader_life) = match input.generics.lifetimes().count() {
         0 => Ok((quote!(), quote!(<'_>))),
-        1 => Ok((quote!(<'a>), quote!(<'a>))),
+        1 => Ok((quote!(<'doc>), quote!(<'doc>))),
         _ => Err("Can't derive `Read` on type with more than one lifetime parameter"),
     }?;
 

@@ -5,8 +5,8 @@ use crate::reader::{Read, Walker};
 use crate::Error;
 
 /// A reference to a slice of the document data.
-impl<'a> Read<'a> for &'a str {
-    fn parse_tsv(fields: &mut Walker<'a>) -> Result<Self, Error> {
+impl<'doc> Read<'doc> for &'doc str {
+    fn parse_tsv(fields: &mut Walker<'doc>) -> Result<Self, Error> {
         fields.next_field()
     }
 }
