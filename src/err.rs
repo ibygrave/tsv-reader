@@ -3,7 +3,7 @@
 use core::{fmt::Display, num::ParseIntError, str::Utf8Error};
 
 /// Error type of parsers.
-#[derive(Debug)]
+#[derive(PartialEq, Debug)]
 pub enum Error {
     /// Document data is not valid UTF8.
     Utf8,
@@ -13,6 +13,8 @@ pub enum Error {
     EndOfDocument,
     /// Unexpectedly reached end of line.
     EndOfLine,
+    /// Line contained surplus unparsed fields.
+    SurplusFields,
 }
 
 impl Display for Error {
@@ -22,6 +24,7 @@ impl Display for Error {
             Error::ParseField => write!(f, "Error::ParseField"),
             Error::EndOfDocument => write!(f, "Error::EndOfDocument"),
             Error::EndOfLine => write!(f, "Error::EndOfLine"),
+            Error::SurplusFields => write!(f, "Error::SurplusFields"),
         }
     }
 }

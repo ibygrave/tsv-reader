@@ -27,7 +27,12 @@ impl<'doc> Walker<'doc> {
     }
 
     fn parse_one_line<T: Read<'doc>>(line: &'doc str) -> Result<T, Error> {
-        Self(line.split('\t')).parse_one()
+        let mut walker = Self(line.split('\t'));
+        let obj = walker.parse_one()?;
+        match walker.next_field() {
+            Ok(_) => Err(Error::SurplusFields),
+            Err(_) => Ok(obj),
+        }
     }
 }
 
@@ -56,11 +61,6 @@ impl<'doc> Document<'doc> {
 
     /// Parses the next line of the document as a value of type `T`.
     /// Returns an error if parsing fails.
-    ///
-    /// Note: If parsing completes without using all the fields
-    /// on the line, this is not an error. Unused fields are ignored.
-    ///
-    /// TODO: Make surplus fields into an error?
     pub fn parse_one<T: Read<'doc>>(&mut self) -> Result<T, Error> {
         Walker::parse_one_line(self.0.next().ok_or(Error::EndOfDocument)?)
     }

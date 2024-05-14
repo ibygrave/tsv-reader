@@ -10,11 +10,10 @@
 //! ```rust
 //! # use tsv_reader::*;
 //! // A TSV document where the first line is a `Header` and the rest are `Object`s.
-//! const DOC: &[u8] = br#"1	Example Title	FFFFFF
-//! 000000	false	Line	0	0	500	500
-//! 550055	true	Circle	200	300	20
-//! FF0055	false	Rectangle	100	100	200	200
-//! "#;
+//! const DOC: &[u8] = b"1\tExample Title\tFFFFFF
+//! 000000\tfalse\tLine\t0\t0\t500\t500
+//! 550055\ttrue\tCircle\t200\t300\t20
+//! FF0055\tfalse\tRectangle\t100\t100\t200\t200";
 //!
 //! #[derive(PartialEq, Debug, Read)]
 //! struct Colour([u8; 3]);
@@ -71,3 +70,59 @@ mod reader;
 
 pub use err::Error;
 pub use reader::{Document, Read, Walker};
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[derive(PartialEq, Debug, Read)]
+    struct Pair(u8, u8);
+
+    #[test]
+    fn test_bad_utf8() {
+        let doc = Document::new(b"\xF0\xA4\xAD");
+        assert!(doc.is_err());
+        assert_eq!(doc.err().unwrap(), Error::Utf8);
+    }
+
+    #[test]
+    fn test_parse_field() {
+        let mut doc = Document::new(b"abc").unwrap();
+        let obj: Result<u8, Error> = doc.parse_one();
+        assert!(obj.is_err());
+        assert_eq!(obj.err().unwrap(), Error::ParseField);
+    }
+
+    #[test]
+    fn test_parse_subfield() {
+        let mut doc = Document::new(b"42\txyz").unwrap();
+        let obj: Result<Pair, Error> = doc.parse_one();
+        assert!(obj.is_err());
+        assert_eq!(obj.err().unwrap(), Error::ParseField);
+    }
+
+    #[test]
+    fn test_endofdocument() {
+        let mut doc = Document::new(b"42\t31").unwrap();
+        let _: Pair = doc.parse_one().unwrap();
+        let obj2: Result<Pair, Error> = doc.parse_one();
+        assert!(obj2.is_err());
+        assert_eq!(obj2.err().unwrap(), Error::EndOfDocument);
+    }
+
+    #[test]
+    fn test_endofline() {
+        let mut doc = Document::new(b"42").unwrap();
+        let obj: Result<Pair, Error> = doc.parse_one();
+        assert!(obj.is_err());
+        assert_eq!(obj.err().unwrap(), Error::EndOfLine);
+    }
+
+    #[test]
+    fn test_surplusfields() {
+        let mut doc = Document::new(b"42\t21\t0").unwrap();
+        let obj: Result<Pair, Error> = doc.parse_one();
+        assert!(obj.is_err());
+        assert_eq!(obj.err().unwrap(), Error::SurplusFields);
+    }
+}
