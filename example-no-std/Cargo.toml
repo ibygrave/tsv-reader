@@ -4,5 +4,5 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-libc-print = "0.1"
+libc-print = "0.1.23"
 tsv-reader = { path = "..", default-features = false, features = ["derive"] }
