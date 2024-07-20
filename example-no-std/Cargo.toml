@@ -2,6 +2,7 @@
 name = "example-no-std"
 version = "0.1.0"
 edition = "2021"
+rust-version = "1.61.0"
 
 [dependencies]
 libc-print = "0.1.23"
