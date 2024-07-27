@@ -29,9 +29,6 @@ impl Display for Error {
     }
 }
 
-#[cfg(std)]
-impl std::error::Error for Error {}
-
 impl From<Utf8Error> for Error {
     fn from(_value: Utf8Error) -> Self {
         Error::Utf8
