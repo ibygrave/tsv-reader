@@ -25,7 +25,7 @@ enum Bob {
     Mouse { head: u32, tail: [u8; 4] },
 }
 
-fn parse_data(input: &[u8]) -> Result<(Alice<'_>, impl Iterator<Item = Bob> + '_), Error> {
+fn parse_data(input: &[u8]) -> Result<(Alice<'_>, impl Iterator<Item = Bob> + use<'_>), Error> {
     let mut doc = Document::new(input)?;
     Ok((doc.parse_one()?, doc.parse_iter().map_while(|r| r.ok())))
 }
